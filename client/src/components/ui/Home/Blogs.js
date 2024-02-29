@@ -5,7 +5,10 @@ import BlogCard from "./BlogCard";
 import { useEffect, useState } from "react";
 
 
+
 const Blogs = () => {
+
+
 
     //States
     const [searchString, setSearchString] = useState('');
