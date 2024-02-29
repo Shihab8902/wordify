@@ -1,9 +1,14 @@
 "use client";
 
+import { UserContext } from "@/context/AuthContext";
 import Link from "next/link";
+import { useContext } from "react";
 import { IoPersonAdd } from "react-icons/io5";
 
 const NavBar = () => {
+
+    //Get the user status
+    const { user } = useContext(UserContext);
 
     const navLinks = [
         {
@@ -22,7 +27,7 @@ const NavBar = () => {
 
 
     return (
-        <div className="navbar bg-base-100 px-5">
+        <div className="navbar bg-base-100 p-5">
             <div className="navbar-start">
                 <div className="dropdown">
                     <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
@@ -39,7 +44,13 @@ const NavBar = () => {
                 <Link href="/" className="btn btn-ghost text-xl md:text-2xl">Wordify</Link>
             </div>
             <div className="navbar-end">
-                <Link href="/login"> <button className="text-xl"> <IoPersonAdd /></button></Link>
+                {
+                    user ?
+                        <button className="bg-blue-600 text-white px-6 py-3 rounded-md text-sm font-medium">Dashboard</button>
+
+                        :
+                        <Link href="/login"> <button className="text-xl"> <IoPersonAdd /></button></Link>
+                }
             </div>
         </div>
     )
