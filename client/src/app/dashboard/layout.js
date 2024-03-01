@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 import { useContext } from "react";
 import { CgMenuLeftAlt } from "react-icons/cg";
 import { FaPencilAlt, FaRegListAlt } from "react-icons/fa";
-import { FaUsers } from "react-icons/fa6";
+import { FaList, FaUsers } from "react-icons/fa6";
 import { IoIosJournal } from "react-icons/io";
 
 
@@ -26,8 +26,8 @@ const DashboardLayout = ({ children }) => {
 
         {
             user?.role === "admin" && <>
+                <li className={`font-semibold text-lg mb-5 ${pathname === "/dashboard/manageBlogs" ? "bg-blue-600 text-white" : "bg-gray-100 text-black"} rounded-lg`}>  <Link href="/dashboard/manageBlogs">< FaList />Manage Blogs</Link></li>
                 <li className={`font-semibold text-lg mb-5 ${pathname === "/dashboard/manageUsers" ? "bg-blue-600 text-white" : "bg-gray-100 text-black"} rounded-lg`}>  <Link href="/dashboard/manageUsers">< FaUsers />Manage Users</Link></li>
-
             </>
         }
     </>

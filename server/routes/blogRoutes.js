@@ -4,7 +4,9 @@ const getRecentBlogs = require("../controllers/blogs/getRecentBlogs");
 const getSingleBlog = require("../controllers/blogs/getSingleBlog");
 const getTotalBlogCount = require("../controllers/blogs/getTotalBlogCount");
 const getUserSpecificBlogs = require("../controllers/blogs/getUserSpecificBlogs");
+const handleAllBlogsByAdmin = require("../controllers/blogs/handleAllBlogsByAdmin");
 const updateBlog = require("../controllers/blogs/updateBlog");
+const verifyAdmin = require("../middlewares/verifyAdmin");
 const verifyToken = require("../middlewares/verifyToken");
 
 const router = require("express").Router();
@@ -17,6 +19,9 @@ router.get("/api/blog/recent", getRecentBlogs);
 
 //Get all blog posts
 router.get("/api/blogs", getAllBlogs);
+
+//Get all blog post for admin
+router.get("/api/admin/blogs", verifyToken, verifyAdmin, handleAllBlogsByAdmin);
 
 //Get total blog count
 router.get("/api/blogs/total", getTotalBlogCount);

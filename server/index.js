@@ -1,12 +1,13 @@
+require("dotenv").config();
 const express = require("express");
-const globalErrorHandler = require("./utils/globalErrorHandler");
-const bodyParser = require('body-parser')
-
-const app = express();
 const cors = require("cors");
+const globalErrorHandler = require("./utils/globalErrorHandler");
+const bodyParser = require('body-parser');
+const app = express();
 const connectDB = require("./db/connectDB");
 const useRoutes = require("./routes");
 const port = process.env.PORT || 9000;
+
 
 
 
@@ -34,8 +35,6 @@ app.all("*", (req, res, next) => {
 });
 
 app.use(globalErrorHandler);
-
-
 
 
 //Listen server and establish database connection

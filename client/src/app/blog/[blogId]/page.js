@@ -14,7 +14,8 @@ import Swal from "sweetalert2";
 import CommentEditModal from "@/components/modal/CommentEditModal";
 
 //Connect to the socket server
-const socket = io.connect('ws://localhost:5000');
+const socket = io.connect('wss://wordify-socket-server.glitch.me');
+
 
 
 
@@ -68,7 +69,7 @@ const BlogPage = ({ params }) => {
             if (updatedPostId === _id) {
                 const newComments = [...userComments, newComment.comment];
                 setUserComments(newComments);
-                axiosSecure.put(`/api/blog?id=${_id}`, newComments);    //Store updated comments
+                axiosSecure.put(`/api/blog?id=${_id}`, { comments: newComments });    //Store updated comments
             }
         });
 

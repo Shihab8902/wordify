@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const axiosPublic = axios.create({
-    baseURL: "http://localhost:9000"
+    baseURL: "https://wordify-server-v2.vercel.app"
 });
 
 const useAxiosPublic = () => {

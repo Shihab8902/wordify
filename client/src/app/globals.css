@@ -39,3 +39,11 @@
     font-size: 1.125rem !important;
     font-weight: bold;
 }
+
+.blog-content ol {
+    list-style: decimal !important;
+}
+
+.blog-content ul {
+    list-style: disc !important;
+}

@@ -1,14 +1,23 @@
+"use client";
+
+import { UserContext } from '@/context/AuthContext';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import { useContext } from 'react';
 
 
 
 
 export const axiosSecure = axios.create({
-    baseURL: "http://localhost:9000",
+    baseURL: "https://wordify-server-v2.vercel.app",
 
 });
 
 const useAxiosSecure = () => {
+
+    const { logOutUser } = useContext(UserContext);
+
+    const router = useRouter();
 
     // Add a request interceptor
     axiosSecure.interceptors.request.use(function (config) {
@@ -27,7 +36,8 @@ const useAxiosSecure = () => {
         return response;
     }, function (error) {
         if (error.status === 401 || error.status === 403) {
-            console.log(error)
+            logOutUser();
+            router.push("/login");
         }
         return Promise.reject(error);
     });
