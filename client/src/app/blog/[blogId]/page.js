@@ -10,6 +10,8 @@ import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import { FaEdit } from "react-icons/fa";
+import Swal from "sweetalert2";
+import CommentEditModal from "@/components/modal/CommentEditModal";
 
 //Connect to the socket server
 const socket = io.connect('ws://localhost:5000');
@@ -28,6 +30,8 @@ const BlogPage = ({ params }) => {
 
     //State
     const [userComments, setUserComments] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [currentlySelectedComment, setCurrentlySelectedComment] = useState({});
 
     //update the state of comments
     useEffect(() => {
@@ -76,6 +80,43 @@ const BlogPage = ({ params }) => {
 
 
 
+    //Handle comment delete
+    const handleCommentDelete = id => {
+        Swal.fire({
+            title: "Delete?",
+            text: "Are you sure want to delete the comment?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const remainingComments = userComments?.filter(com => com.id !== id);
+                setUserComments(remainingComments);
+                axiosSecure.put(`/api/blog?id=${_id}`, remainingComments)
+                    .then(() => {
+                        Swal.fire({
+                            icon: "success",
+                            text: "Comment deleted successfully!",
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    })
+            }
+        });
+    }
+
+
+    //Handle comment edit
+    const handleCommentEdit = id => {
+        const selectedComment = userComments?.find(c => c.id === id);
+        setCurrentlySelectedComment(selectedComment);
+        setIsModalOpen(!isModalOpen);
+    }
+
+
+
 
 
 
@@ -86,7 +127,7 @@ const BlogPage = ({ params }) => {
 
                 // Blog Body
                 <div>
-                    <img className="h-[400px] w-full object-cover rounded-md" src={image} alt="image unavailable" />
+                    <img className="h-[200px] md:h-[400px] w-full object-cover rounded-md" src={image} alt="image unavailable" />
 
                     {/* Additional info */}
                     <div className="flex items-center my-5 gap-1 md:gap-3">
@@ -130,13 +171,13 @@ const BlogPage = ({ params }) => {
                     <div className="blog-content" dangerouslySetInnerHTML={{ __html: content }}></div>
 
                     {/* Video */}
-                    <video className="h-[400px] mx-auto w-fit rounded-lg my-10 " muted src={videoLink} controls></video>
+                    <video className="h-[200px] md:h-[400px] mx-auto w-fit rounded-lg my-10 " muted src={videoLink} controls></video>
 
                     {/* Comments */}
                     <div>
                         <h3 className="text-2xl font-semibold mb-5">{userComments?.length} Comments</h3>
                         <form className="mb-10" onSubmit={handleCommentSubmit}>
-                            <textarea name="comment" id="comment" className="border-2 rounded block lg:w-1/2 h-32 outline-none resize-none p-3" placeholder="Leave a comment " required></textarea>
+                            <textarea name="comment" id="comment" className="border-2 rounded block w-full lg:w-1/2 h-32 outline-none resize-none p-3" placeholder="Leave a comment " required></textarea>
                             <button disabled={!user} type="submit" className="px-8 bg-blue-600 rounded text-white py-2 mt-3 font-semibold disabled:bg-gray-500 " >Submit </button>
                         </form>
 
@@ -156,8 +197,8 @@ const BlogPage = ({ params }) => {
 
                                             {/* Action buttons */}
                                             <div className={`${user?.role === "admin" || email === user?.email ? "block" : "hidden"} flex items-center gap-3`}>
-                                                <button className="text-green-600"><FaEdit /></button>
-                                                <button className="text-red-600"><FaTrash /></button>
+                                                <button className="text-green-600" onClick={() => handleCommentEdit(id)}><FaEdit /></button>
+                                                <button className="text-red-600" onClick={() => handleCommentDelete(id)}><FaTrash /></button>
                                             </div>
 
 
@@ -182,7 +223,7 @@ const BlogPage = ({ params }) => {
                 </div>
         }
 
-
+        <CommentEditModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} postId={_id} setComments={setUserComments} comments={userComments} comment={currentlySelectedComment} />
 
 
     </div>
