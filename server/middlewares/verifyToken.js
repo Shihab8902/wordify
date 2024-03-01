@@ -9,12 +9,12 @@ const verifyToken = (req, res, next) => {
             return res.status(401).send({ message: "unauthorized" });
         }
 
-        jwt.verify(token, process.env.TOKEN_SECRET, (error, encoded) => {
+        jwt.verify(token, process.env.TOKEN_SECRET, (error, decoded) => {
             if (error) {
                 return res.status(401).send({ message: "unauthorized" });
             }
 
-            req.user = encoded.user;
+            req.user = decoded;
             next();
         })
 

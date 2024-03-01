@@ -26,7 +26,6 @@ const DashboardLayout = ({ children }) => {
 
         {
             user?.role === "admin" && <>
-                <li className={`font-semibold text-lg mb-5 ${pathname === "/dashboard/manageBlogs" ? "bg-blue-600 text-white" : "bg-gray-100 text-black"} rounded-lg`}>  <Link href="/dashboard/manageBlogs">< FaRegListAlt /> Manage Blogs</Link></li>
                 <li className={`font-semibold text-lg mb-5 ${pathname === "/dashboard/manageUsers" ? "bg-blue-600 text-white" : "bg-gray-100 text-black"} rounded-lg`}>  <Link href="/dashboard/manageUsers">< FaUsers />Manage Users</Link></li>
 
             </>
