@@ -46,7 +46,7 @@ const NavBar = () => {
             <div className="navbar-end">
                 {
                     user ?
-                        <button className="bg-blue-600 text-white px-6 py-3 rounded-md text-sm font-medium">Dashboard</button>
+                        <Link href="/dashboard/compose"> <button className="bg-blue-600 text-white px-6 py-3 rounded-md text-sm font-medium">Dashboard</button></Link>
 
                         :
                         <Link href="/login"> <button className="text-xl"> <IoPersonAdd /></button></Link>

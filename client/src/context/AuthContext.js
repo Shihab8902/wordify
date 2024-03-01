@@ -58,6 +58,14 @@ const AuthContext = ({ children }) => {
     }
 
 
+    //Log out user
+    const logOutUser = () => {
+        setLoading(true);
+        setUser(null);
+        localStorage.removeItem("access-token");
+    }
+
+
 
     //Search for user after initial render
     useEffect(() => {
@@ -68,7 +76,12 @@ const AuthContext = ({ children }) => {
                     setUser(res.data)
                     setLoading(false);
                 });
+        } else {
+            setLoading(false);
         }
+
+        setUser(null);
+
 
     }, []);
 
@@ -77,7 +90,8 @@ const AuthContext = ({ children }) => {
         user,
         loading,
         createUser,
-        loginUser
+        loginUser,
+        logOutUser
     }
 
     return <UserContext.Provider value={authValue}>

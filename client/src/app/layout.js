@@ -1,6 +1,5 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import NavBar from "@/components/shared/NavBar";
 import AuthContext from "@/context/AuthContext";
 import { ReactQueryProvider } from "./ReactQueryProvider";
 
@@ -21,7 +20,6 @@ export default function RootLayout({ children }) {
       <ReactQueryProvider>
         <AuthContext>
           <body className={inter.className}>
-            <NavBar />
             {children}
           </body>
         </AuthContext>

@@ -28,6 +28,14 @@ const blogSchema = new mongoose.Schema({
     content: {
         type: String,
         required: true
+    },
+    image: {
+        type: String,
+        required: true
+    },
+    videoLink: {
+        type: String,
+        required: true
     }
 });
 

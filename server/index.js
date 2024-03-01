@@ -1,5 +1,6 @@
 const express = require("express");
 const globalErrorHandler = require("./utils/globalErrorHandler");
+const bodyParser = require('body-parser')
 
 const app = express();
 const cors = require("cors");
@@ -11,7 +12,8 @@ const port = process.env.PORT || 9000;
 
 //Middlewares
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '30mb' }));
+app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
 
 
 //Check server status
