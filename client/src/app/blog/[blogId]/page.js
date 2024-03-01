@@ -94,7 +94,7 @@ const BlogPage = ({ params }) => {
             if (result.isConfirmed) {
                 const remainingComments = userComments?.filter(com => com.id !== id);
                 setUserComments(remainingComments);
-                axiosSecure.put(`/api/blog?id=${_id}`, remainingComments)
+                axiosSecure.put(`/api/blog?id=${_id}`, { comments: remainingComments })
                     .then(() => {
                         Swal.fire({
                             icon: "success",

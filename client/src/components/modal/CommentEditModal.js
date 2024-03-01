@@ -19,7 +19,7 @@ const CommentEditModal = ({ isModalOpen, setIsModalOpen, comments, setComments, 
 
         await setComments(comments);
 
-        axiosSecure.put(`/api/blog?id=${postId}`, comments)
+        axiosSecure.put(`/api/blog?id=${postId}`, { comments })
             .then(() => {
                 Swal.fire({
                     icon: "success",
