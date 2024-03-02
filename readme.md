@@ -2,7 +2,12 @@
 
 ### The website is live at: https://wordify-ruddy.vercel.app
 ---
-
+### For accessing the admin dashboard
+    - login with
+         Email:  admin@wordify.com
+         Password: 12345678
+---
+         
 <b>"Wordify" is a dynamic blogging platform which offers user to create and manage blog posts, share thoughts with real time commenting system, user access management and many more.</b>
 
 
