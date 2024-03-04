@@ -24,12 +24,12 @@ const Banner = () => {
                     <Carousel className="relative " showThumbs={false} autoPlay infiniteLoop>
                         {
                             blogs?.map(blog => {
-                                const { image, category, publisher, publishDate, comments, title, content } = blog;
+                                const { image, category, publisher, publishDate, comments, title, content, thumbnail } = blog;
 
                                 const slicedContent = content?.length > 160 ? content.slice(0, 160) + "..." : content;
 
                                 return <div className="w-full h-[220px] md:h-[500px] lg:rounded-lg">
-                                    <img src={image} className="w-full h-[500px] lg:rounded-lg" alt="image unavailable" />
+                                    <img src={thumbnail || image} className="w-full h-[500px] lg:rounded-lg" alt="image unavailable" />
 
 
                                     {/* Inner contents */}

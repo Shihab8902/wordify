@@ -76,10 +76,10 @@ const MyBlogsPage = () => {
                     {
                         blogs.map(blog => {
 
-                            const { image, publishDate, publisher, comments, title, _id } = blog;
+                            const { image, publishDate, publisher, comments, title, _id, thumbnail } = blog;
 
                             return <div className="border pb-5 hover:shadow-lg rounded ">
-                                <img className="w-full h-64 aspect-square rounded-tl rounded-tr" src={image} alt="image unavailable" />
+                                <img className="w-full h-64 aspect-square rounded-tl rounded-tr" src={thumbnail || image} alt="image unavailable" />
 
                                 <div className="px-2">
 

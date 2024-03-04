@@ -5,6 +5,7 @@ const getSingleBlog = require("../controllers/blogs/getSingleBlog");
 const getTotalBlogCount = require("../controllers/blogs/getTotalBlogCount");
 const getUserSpecificBlogs = require("../controllers/blogs/getUserSpecificBlogs");
 const handleAllBlogsByAdmin = require("../controllers/blogs/handleAllBlogsByAdmin");
+const postBlog = require("../controllers/blogs/postBlog");
 const updateBlog = require("../controllers/blogs/updateBlog");
 const verifyAdmin = require("../middlewares/verifyAdmin");
 const verifyToken = require("../middlewares/verifyToken");
@@ -28,6 +29,9 @@ router.get("/api/blogs/total", getTotalBlogCount);
 
 //Get single blog
 router.get("/api/blog", getSingleBlog);
+
+//Post a blog post
+router.post("/api/blog", verifyToken, postBlog);
 
 //Update blog
 router.put("/api/blog", verifyToken, updateBlog);

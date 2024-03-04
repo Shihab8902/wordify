@@ -24,7 +24,7 @@ const BlogEditModal = ({ isModalOpen, setIsModalOpen, data, refetch }) => {
             ['blockquote', 'code-block'],
             [{ 'script': 'sub' }, { 'script': 'super' }],
             [{ 'indent': '-1' }, { 'indent': '+1' }],
-            ['link'],
+            ['link', 'image', 'video'],
             ['clean'],
         ],
     };

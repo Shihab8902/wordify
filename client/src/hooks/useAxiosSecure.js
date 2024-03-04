@@ -9,7 +9,7 @@ import { useContext } from 'react';
 
 
 export const axiosSecure = axios.create({
-    baseURL: "https://wordify-server-v2.vercel.app",
+    baseURL: "https://wordify-server-v4.vercel.app",
 
 });
 

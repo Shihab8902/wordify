@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 
+body {
+    overflow-x: hidden;
+}
+
 
 /* Slider config */
 .carousel .slide {
@@ -46,4 +50,12 @@
 
 .blog-content ul {
     list-style: disc !important;
+}
+
+.blog-content a {
+    color: blue;
+}
+
+.blog-content a:hover {
+    text-decoration: underline;
 }

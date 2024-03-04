@@ -10,7 +10,7 @@ const BlogCard = ({ blog }) => {
 
 
 
-    const { image, publishDate, publisher, comments, title, _id } = blog;
+    const { image, publishDate, publisher, comments, title, _id, thumbnail } = blog;
 
     // Initialize aos
     useEffect(() => {
@@ -22,7 +22,7 @@ const BlogCard = ({ blog }) => {
     return <Link href={`/blog/${_id}`}>
 
         <div data-aos="fade-up" className="border pb-5 hover:shadow-lg rounded cursor-pointer h-full w-full">
-            <img className="w-full h-64 aspect-square rounded-tl rounded-tr" src={image} alt="image unavailable" />
+            <img className="w-full h-64 aspect-square rounded-tl rounded-tr" src={thumbnail || image} alt="image unavailable" />
 
             <div className="px-2">
 

@@ -3,13 +3,13 @@
 import { useQuill } from 'react-quilljs';
 import 'quill/dist/quill.snow.css';
 import { useContext, useEffect, useState } from 'react';
-import { IoImagesOutline } from "react-icons/io5";
-import { FaPhotoVideo } from "react-icons/fa";
 import { UserContext } from '@/context/AuthContext';
 import moment from 'moment';
 import useAxiosSecure from '@/hooks/useAxiosSecure';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
+import { IoImagesOutline } from 'react-icons/io5';
+import useAxiosPublic from '@/hooks/useAxiosPublic';
 
 const ComposePage = () => {
 
@@ -17,32 +17,17 @@ const ComposePage = () => {
 
     const axiosSecure = useAxiosSecure();
     const router = useRouter();
+    const axiosPublic = useAxiosPublic();
 
     //States
     const [content, setContent] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
-    const [selectedImage, setSelectedImage] = useState('');
-    const [selectedVideo, setSelectedVideo] = useState('');
+    const [selectedThumbnail, setSelectedThumbnail] = useState('');
+
     const [isUploading, setIsUploading] = useState(false);
 
 
-    //Convert files in base64 format
-    const convertBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const fileReader = new FileReader();
-            fileReader.readAsDataURL(file);
-
-            fileReader.onload = () => {
-                resolve(fileReader.result);
-            };
-
-            fileReader.onerror = (error) => {
-                reject(error);
-            };
-        });
-    };
-
-
+    const imageHostingAPIKey = "1117f17309eeaf8ef62fb46d40b611b0";
 
     //Editor toolbars
     const modules = {
@@ -53,7 +38,7 @@ const ComposePage = () => {
             ['blockquote', 'code-block'],
             [{ 'script': 'sub' }, { 'script': 'super' }],
             [{ 'indent': '-1' }, { 'indent': '+1' }],
-            ['link'],
+            ['link', 'image', 'video'],
             ['clean'],
         ],
     };
@@ -74,7 +59,7 @@ const ComposePage = () => {
 
 
     //Handle form submit
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         setIsUploading(true);
 
@@ -89,60 +74,55 @@ const ComposePage = () => {
             });
         }
 
-        //Check for file sizes
-        if (selectedImage?.size >= 20971520) {
-            setIsUploading(false)
-            return Swal.fire({
-                icon: "error",
-                text: "Maximum file size limit exceed for image!"
-            });
-        }
 
-        if (selectedVideo?.size >= 20971520) {
-            setIsUploading(false)
-            return Swal.fire({
-                icon: "error",
-                text: "Maximum file size limit exceed for video!"
-            });
-        }
-
-        //Convert image to base 64
-        const imageData = await convertBase64(selectedImage);
-        const videoData = await convertBase64(selectedVideo);
-
-        const blogData = {
-            title: e.target.title.value,
-            category: selectedCategory,
-            publisher: user.name,
-            publisherEmail: user.email,
-            publishDate: date,
-            image: imageData,
-            videoLink: videoData,
-            comments: [],
-            content
-        }
-
-        axiosSecure.post("/api/upload/image", blogData)
+        axiosPublic.post(`https://api.imgbb.com/1/upload?key=${imageHostingAPIKey}`, { image: selectedThumbnail }, {
+            headers: {
+                "content-Type": "multipart/form-data"
+            }
+        })
             .then(res => {
-                if (res.data?.message === "success") {
-                    setIsUploading(false);
-                    Swal.fire({
-                        icon: "success",
-                        text: "Blog posted successfully!",
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    router.push("/dashboard/myBlogs")
+                if (res.data?.success) {
+                    const imageURL = res.data?.data.display_url;
+                    const blogData = {
+                        title: e.target.title.value,
+                        category: selectedCategory,
+                        publisher: user.name,
+                        publisherEmail: user.email,
+                        publishDate: date,
+                        comments: [],
+                        content,
+                        thumbnail: imageURL
+                    }
+
+                    axiosSecure.post("/api/blog", blogData)
+                        .then(res => {
+                            if (res.data === "success") {
+                                setIsUploading(false);
+                                Swal.fire({
+                                    icon: "success",
+                                    text: "Blog posted successfully!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                router.push("/dashboard/myBlogs")
+                            }
+                        })
+                        .catch(error => {
+                            setIsUploading(false);
+                            Swal.fire({
+                                icon: "error",
+                                title: "Error!",
+                                text: error.message
+                            });
+                        });
+
                 }
             })
-            .catch(error => {
-                setIsUploading(false);
-                Swal.fire({
-                    icon: "error",
-                    title: "Error!",
-                    text: error.message
-                });
-            });
+
+
+
+
+
 
 
     }
@@ -190,44 +170,23 @@ const ComposePage = () => {
                 <div ref={quillRef} />
             </div>
 
-            {/* Attachments */}
-            <h3 className='mt-5 font-medium text-sm'>*Select attachments to continue (max 20mb).</h3>
-            <div className='flex gap-6 mt-2'>
-
-                {
-                    selectedImage ? <div className='w-full h-20 bg-gray-100 hover:bg-gray-200 relative cursor-pointer rounded-lg'>
-                        <div className='flex overflow-hidden w-full h-full justify-center items-center px-3'>
-                            <h3 className='font-semibold text-sm'>Selected File: <span className='font-normal'>{selectedImage.name}</span></h3>
+            {/* Thumbnail */}
+            {
+                selectedThumbnail ? <div className='w-full h-20 bg-gray-100 hover:bg-gray-200 relative cursor-pointer rounded-lg'>
+                    <div className='flex overflow-hidden w-full h-full justify-center items-center px-3'>
+                        <h3 className='font-semibold text-sm'>Selected File: <span className='font-normal'>{selectedThumbnail.name}</span></h3>
+                    </div>
+                </div>
+                    :
+                    <div className='w-full h-20 bg-gray-100 hover:bg-gray-200 relative cursor-pointer rounded-lg'>
+                        <input onChange={(e) => setSelectedThumbnail(e.target.files[0])} name='image' className='w-full h-full absolute top-0 left-0 opacity-0 cursor-pointer' type="file" accept='image/*' required />
+                        <div className='flex justify-center items-center gap-1 h-full'>
+                            <IoImagesOutline className='text-6xl' />
+                            <p className='font-semibold'>Upload Thumbnail</p>
                         </div>
                     </div>
-                        :
-                        <div className='w-full h-20 bg-gray-100 hover:bg-gray-200 relative cursor-pointer rounded-lg'>
-                            <input onChange={(e) => setSelectedImage(e.target.files[0])} name='image' className='w-full h-full absolute top-0 left-0 opacity-0 cursor-pointer' type="file" accept='image/*' required />
-                            <div className='flex justify-center items-center gap-1 h-full'>
-                                <IoImagesOutline className='text-6xl' />
-                                <p className='font-semibold'>Upload Image</p>
-                            </div>
-                        </div>
-                }
+            }
 
-                {
-                    selectedVideo ? <div className='w-full h-20 bg-gray-100 hover:bg-gray-200 relative cursor-pointer rounded-lg'>
-                        <div className='flex overflow-hidden w-full h-full justify-center items-center px-3'>
-                            <h3 className='font-semibold text-sm'>Selected File: <span className='font-normal'>{selectedVideo.name}</span></h3>
-                        </div>
-                    </div>
-                        :
-
-                        <div className='w-full h-20 hover:bg-gray-200 bg-gray-100 relative cursor-pointer rounded-lg '>
-                            <input onChange={(e) => setSelectedVideo(e.target.files[0])} className='w-full h-full absolute top-0 left-0 opacity-0 cursor-pointer' type="file" accept='video/*' required />
-                            <div className='flex justify-center items-center gap-1 h-full'>
-                                <FaPhotoVideo className='text-6xl' />
-                                <p className='font-semibold'>Upload Video</p>
-                            </div>
-                        </div>
-                }
-
-            </div>
 
             <button disabled={isUploading} type='submit' className='w-full font-semibold mt-10 bg-blue-600 text-white py-3 disabled:bg-gray-200 disabled:text-black rounded-lg'>
                 {

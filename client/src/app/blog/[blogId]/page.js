@@ -27,7 +27,7 @@ const BlogPage = ({ params }) => {
     //Get blog data
     const { data: blog = {}, refetch, isPending } = useGetPublic([params, "blog"], `/api/blog?id=${params.blogId}`);
 
-    const { image, publishDate, publisher, comments, title, category, content, videoLink, _id } = blog;
+    const { image, publishDate, publisher, comments, title, category, content, videoLink, _id, thumbnail } = blog;
 
     //State
     const [userComments, setUserComments] = useState([]);
@@ -128,10 +128,10 @@ const BlogPage = ({ params }) => {
 
                 // Blog Body
                 <div>
-                    <img className="h-[200px] md:h-[400px] w-full object-cover rounded-md" src={image} alt="image unavailable" />
+                    <img className="h-[200px] md:h-[400px] w-full object-cover rounded-md" src={thumbnail || image} alt="image unavailable" />
 
                     {/* Additional info */}
-                    <div className="flex items-center my-5 gap-1 md:gap-3">
+                    <div className={`flex items-center  w-full my-5 gap-1 md:gap-3 `}>
                         <div className="flex items-center gap-1">
                             <img className="!w-10 h-10 rounded-full" src="https://res.cloudinary.com/dvwwkobql/image/upload/v1709224308/d4ry1uogwqltbbobia8i.jpg" alt={publisher} />
                             {/* For mobile */}
@@ -172,10 +172,10 @@ const BlogPage = ({ params }) => {
                     <div className="blog-content" dangerouslySetInnerHTML={{ __html: content }}></div>
 
                     {/* Video */}
-                    <video className="h-[200px] md:h-[400px] mx-auto w-fit rounded-lg my-10 " muted src={videoLink} controls></video>
+                    {videoLink && <video className="h-[200px] md:h-[400px] mx-auto w-fit rounded-lg my-10 " muted src={videoLink} controls></video>}
 
                     {/* Comments */}
-                    <div>
+                    <div className="mt-10">
                         <h3 className="text-2xl font-semibold mb-5">{userComments?.length} Comments</h3>
                         <form className="mb-10" onSubmit={handleCommentSubmit}>
                             <textarea name="comment" id="comment" className="border-2 rounded block w-full lg:w-1/2 h-32 outline-none resize-none p-3" placeholder="Leave a comment " required></textarea>
